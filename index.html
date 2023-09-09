@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi dan List Pendaftar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="tabs">
+        <button class="tablinks" onclick="openTab(event, 'Registrasi')">Registrasi</button>
+        <button class="tablinks" onclick="openTab(event, 'ListPendaftar')">List Pendaftar</button>
+    </div>
+
+    <div id="Registrasi" class="tabcontent">
+        <h2>Form Registrasi</h2>
+        <form id="registrationForm">
+            <label for="nama">Nama (minimal 10 karakter):</label>
+            <input type="text" id="nama" required>
+            <br><br>
+            <label for="umur">Umur (minimal 25 tahun):</label>
+            <input type="number" id="umur" required min="25">
+            <br><br>
+            <label for="uangSaku">Uang Saku (minimal 100 ribu, maksimal 1 juta):</label>
+            <input type="number" id="uangSaku" required min="100000" max="1000000">
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="ListPendaftar" class="tabcontent">
+        <h2>List Pendaftar</h2>
+        <table id="pendaftarTable">
+            <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Umur</th>
+                    <th>Uang Saku</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        class RegistrationApp {
+            constructor() {
+                this.registrationForm = document.getElementById('registrationForm');
+                this.pendaftarTable = document.getElementById('pendaftarTable');
+                this.namaInput = document.getElementById('nama');
+                this.umurInput = document.getElementById('umur');
+                this.uangSakuInput = document.getElementById('uangSaku');
+                this.loadData();
+        
+                this.registrationForm.addEventListener('submit', this.onSubmit.bind(this));
+            }
+        
+            onSubmit(event) {
+                event.preventDefault();
+                const nama = this.namaInput.value;
+                const umur = this.umurInput.value;
+                const uangSaku = this.uangSakuInput.value;
+        
+                if (nama.length >= 10 && umur >= 25 && uangSaku >= 100000 && uangSaku <= 1000000) {
+                    this.saveData(nama, umur, uangSaku);
+                    this.loadData();
+                    this.clearForm();
+                } else {
+                    alert('Mohon isi form dengan benar.');
+                }
+            }
+        
+            saveData(nama, umur, uangSaku) {
+                let pendaftar = JSON.parse(localStorage.getItem('pendaftar')) || [];
+                pendaftar.push({ nama, umur, uangSaku });
+                localStorage.setItem('pendaftar', JSON.stringify(pendaftar));
+            }
+        
+            loadData() {
+                const pendaftar = JSON.parse(localStorage.getItem('pendaftar')) || [];
+                this.displayData(pendaftar);
+            }
+        
+            displayData(data) {
+                const tbody = this.pendaftarTable.querySelector('tbody');
+                tbody.innerHTML = '';
+        
+                for (const item of data) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.nama}</td>
+                        <td>${item.umur}</td>
+                        <td>${item.uangSaku}</td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            }
+        
+            clearForm() {
+                this.namaInput.value = '';
+                this.umurInput.value = '';
+                this.uangSakuInput.value = '';
+            }
+        }
+        
+        function openTab(event, tabName) {
+            const tabContents = document.getElementsByClassName('tabcontent');
+            for (const tabContent of tabContents) {
+                tabContent.style.display = 'none';
+            }
+        
+            const tablinks = document.getElementsByClassName('tablinks');
+            for (const tablink of tablinks) {
+                tablink.className = tablink.className.replace(' active', '');
+            }
+        
+            document.getElementById(tabName).style.display = 'block';
+            event.currentTarget.className += ' active';
+        }
+        
+        const app = new RegistrationApp();
+        openTab(event, 'Registrasi'); 
+        
+    </script>
+</body>
+</html>
