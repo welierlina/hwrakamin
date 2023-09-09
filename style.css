@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.tabs {
+    display: flex;
+}
+
+.tablinks {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.tabcontent {
+    display: none;
+}
+
+table {
+    font-family: sans-serif;
+    color: #black;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table, th, tr {
+    border: 1px solid #ccc;
+}
+
+th, tr {
+    padding: 8px;
+    text-align: left;
+}
+
+button {
+    padding: 5px 10px;
+}
